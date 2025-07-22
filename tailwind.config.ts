@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,12 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// TradawlAI Trading Colors
+				'neon-green': '#00FFAA',
+				'neon-pink': '#FF00C8',
+				'neon-purple': '#B100FF',
+				'dark-bg': '#0B0B0B',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +90,20 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-glow': {
+					'0%, 100%': {
+						boxShadow: '0 0 5px currentColor'
+					},
+					'50%': {
+						boxShadow: '0 0 20px currentColor, 0 0 30px currentColor'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-glow': 'pulse-glow 2s ease-in-out infinite'
 			}
 		}
 	},
