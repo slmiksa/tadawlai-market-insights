@@ -75,9 +75,49 @@ All colors MUST be HSL.
     box-shadow: 0 0 10px #B100FF, 0 0 20px #B100FF, 0 0 40px #B100FF;
   }
   
+  .glow-yellow {
+    box-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 40px #FFD700;
+  }
+  
   .glass-effect {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .text-neon-green {
+    color: #00FFAA;
+  }
+
+  .text-neon-pink {
+    color: #FF00C8;
+  }
+
+  .text-neon-purple {
+    color: #B100FF;
+  }
+
+  .bg-neon-green {
+    background-color: #00FFAA;
+  }
+
+  .bg-neon-pink {
+    background-color: #FF00C8;
+  }
+
+  .bg-neon-purple {
+    background-color: #B100FF;
+  }
+
+  .border-neon-green\/30 {
+    border-color: rgba(0, 255, 170, 0.3);
+  }
+
+  .border-neon-pink\/30 {
+    border-color: rgba(255, 0, 200, 0.3);
+  }
+
+  .border-neon-purple\/30 {
+    border-color: rgba(177, 0, 255, 0.3);
   }
 }

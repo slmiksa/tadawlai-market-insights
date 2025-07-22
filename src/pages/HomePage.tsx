@@ -1,50 +1,129 @@
 
 import { useState, useEffect } from 'react';
 import AnalysisCard from '@/components/AnalysisCard';
-import AlertButton from '@/components/AlertButton';
-import { TrendingUp, TrendingDown, Activity, DollarSign, AlertTriangle, Zap } from 'lucide-react';
+import StockCard from '@/components/StockCard';
+import { TrendingUp, TrendingDown, Activity, DollarSign, AlertTriangle, Zap, Clock } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
 const HomePage = () => {
-  const [currentAlert, setCurrentAlert] = useState<'buy' | 'sell' | 'wait'>('wait');
-  const [marketData, setMarketData] = useState({
-    sp500: { value: 4785.32, change: 1.24 },
-    nasdaq: { value: 15832.11, change: -0.87 },
-    dowJones: { value: 37405.12, change: 0.56 }
+  const [stocksData, setStocksData] = useState([
+    {
+      symbol: 'AAPL',
+      name: 'Apple Inc.',
+      price: 185.64,
+      change: 2.45,
+      changePercent: 1.34,
+      signal: 'buy' as const,
+      signalStrength: 85,
+      timeFrame: '5-15 دقيقة',
+      reasoning: 'كسر مقاومة قوية عند 184$، سيولة عالية، تدفق أموال إيجابي',
+      targetPrice: 188.50,
+      stopLoss: 183.20,
+      volume: '45.2M',
+      lastUpdate: new Date()
+    },
+    {
+      symbol: 'TSLA',
+      name: 'Tesla Inc.',
+      price: 198.34,
+      change: -3.22,
+      changePercent: -1.6,
+      signal: 'sell' as const,
+      signalStrength: 78,
+      timeFrame: '3-8 دقائق',
+      reasoning: 'هبوط تحت دعم رئيسي 200$، جدار بيع قوي، أخبار سلبية',
+      targetPrice: 195.10,
+      stopLoss: 201.50,
+      volume: '38.9M',
+      lastUpdate: new Date()
+    },
+    {
+      symbol: 'MSFT',
+      name: 'Microsoft Corp.',
+      price: 412.88,
+      change: 1.15,
+      changePercent: 0.28,
+      signal: 'wait' as const,
+      signalStrength: 45,
+      timeFrame: 'انتظار',
+      reasoning: 'حركة جانبية، عدم وضوح الاتجاه، انتظار كسر 415$ أو 410$',
+      targetPrice: 415.00,
+      stopLoss: 410.00,
+      volume: '22.1M',
+      lastUpdate: new Date()
+    },
+    {
+      symbol: 'NVDA',
+      name: 'NVIDIA Corp.',
+      price: 745.23,
+      change: 8.77,
+      changePercent: 1.19,
+      signal: 'buy' as const,
+      signalStrength: 92,
+      timeFrame: '2-7 دقائق',
+      reasoning: 'اختراق قوي فوق 740$، حجم تداول ضخم، أخبار إيجابية عن الذكاء الاصطناعي',
+      targetPrice: 755.00,
+      stopLoss: 742.00,
+      volume: '67.8M',
+      lastUpdate: new Date()
+    },
+    {
+      symbol: 'GOOGL',
+      name: 'Alphabet Inc.',
+      price: 168.92,
+      change: -1.88,
+      changePercent: -1.1,
+      signal: 'sell' as const,
+      signalStrength: 68,
+      timeFrame: '10-20 دقيقة',
+      reasoning: 'كسر دعم 170$، ضعف في الشموع، تدفق أموال سلبي',
+      targetPrice: 166.50,
+      stopLoss: 171.20,
+      volume: '31.5M',
+      lastUpdate: new Date()
+    },
+    {
+      symbol: 'AMZN',
+      name: 'Amazon.com Inc.',
+      price: 156.78,
+      change: 0.45,
+      changePercent: 0.29,
+      signal: 'buy' as const,
+      signalStrength: 72,
+      timeFrame: '8-12 دقيقة',
+      reasoning: 'صعود فوق المتوسط المتحرك، دعم قوي عند 155$، توقعات إيجابية',
+      targetPrice: 159.50,
+      stopLoss: 154.80,
+      volume: '28.7M',
+      lastUpdate: new Date()
+    }
+  ]);
+
+  const [marketOverview, setMarketOverview] = useState({
+    activeSignals: 4,
+    accuracy: 87,
+    totalProfit: '+12.8%',
+    riskLevel: 'متوسط' as const
   });
 
-  const [riskLevel, setRiskLevel] = useState<'منخفض' | 'متوسط' | 'مرتفع'>('متوسط');
-
-  // محاكاة تحديث البيانات
+  // محاكاة تحديث البيانات كل 30 ثانية
   useEffect(() => {
     const interval = setInterval(() => {
-      const alerts = ['buy', 'sell', 'wait'] as const;
-      const risks = ['منخفض', 'متوسط', 'مرتفع'] as const;
-      
-      setCurrentAlert(alerts[Math.floor(Math.random() * alerts.length)]);
-      setRiskLevel(risks[Math.floor(Math.random() * risks.length)]);
-      
-      setMarketData(prev => ({
-        sp500: { 
-          value: prev.sp500.value + (Math.random() - 0.5) * 10,
-          change: (Math.random() - 0.5) * 3
-        },
-        nasdaq: { 
-          value: prev.nasdaq.value + (Math.random() - 0.5) * 50,
-          change: (Math.random() - 0.5) * 3
-        },
-        dowJones: { 
-          value: prev.dowJones.value + (Math.random() - 0.5) * 30,
-          change: (Math.random() - 0.5) * 3
-        }
-      }));
-    }, 3000);
+      setStocksData(prev => prev.map(stock => ({
+        ...stock,
+        price: stock.price + (Math.random() - 0.5) * 2,
+        change: (Math.random() - 0.5) * 4,
+        changePercent: (Math.random() - 0.5) * 2,
+        signalStrength: Math.max(30, Math.min(95, stock.signalStrength + (Math.random() - 0.5) * 10)),
+        lastUpdate: new Date()
+      })));
+    }, 30000);
 
     return () => clearInterval(interval);
   }, []);
 
   const getRiskColor = () => {
-    switch (riskLevel) {
+    switch (marketOverview.riskLevel) {
       case 'منخفض': return 'text-neon-green';
       case 'متوسط': return 'text-yellow-400';
       case 'مرتفع': return 'text-neon-pink';
@@ -60,116 +139,72 @@ const HomePage = () => {
           TradawlAI Trading
         </h1>
         <p className="text-gray-400 text-lg">
-          تحليلات ذكية لحظية للسوق الأمريكي
+          توصيات فورية للأسهم الأمريكية بالذكاء الاصطناعي
         </p>
       </div>
 
-      {/* Alert Buttons */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <AlertButton 
-          type="buy" 
-          isActive={currentAlert === 'buy'}
-          onClick={() => setCurrentAlert('buy')}
-        >
-          🚀 اشتر الآن
-        </AlertButton>
-        <AlertButton 
-          type="sell" 
-          isActive={currentAlert === 'sell'}
-          onClick={() => setCurrentAlert('sell')}
-        >
-          📉 بع الآن
-        </AlertButton>
-        <AlertButton 
-          type="wait" 
-          isActive={currentAlert === 'wait'}
-          onClick={() => setCurrentAlert('wait')}
-        >
-          ⏳ انتظر
-        </AlertButton>
+      {/* Market Overview */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <Card className="glass-effect p-4 border-neon-green/30 text-center">
+          <div className="text-2xl font-bold text-neon-green">{marketOverview.activeSignals}</div>
+          <div className="text-sm text-gray-400">إشارات نشطة</div>
+        </Card>
+        
+        <Card className="glass-effect p-4 border-neon-purple/30 text-center">
+          <div className="text-2xl font-bold text-neon-purple">{marketOverview.accuracy}%</div>
+          <div className="text-sm text-gray-400">دقة التوصيات</div>
+        </Card>
+        
+        <Card className="glass-effect p-4 border-neon-green/30 text-center">
+          <div className="text-2xl font-bold text-neon-green">{marketOverview.totalProfit}</div>
+          <div className="text-sm text-gray-400">إجمالي الأرباح</div>
+        </Card>
+        
+        <Card className="glass-effect p-4 border-white/10 text-center">
+          <div className={`text-2xl font-bold ${getRiskColor()}`}>{marketOverview.riskLevel}</div>
+          <div className="text-sm text-gray-400">مستوى المخاطرة</div>
+        </Card>
       </div>
 
-      {/* Risk Indicator */}
-      <Card className="glass-effect p-6 text-center border-white/10">
-        <div className="flex items-center justify-center space-x-2 space-x-reverse">
-          <AlertTriangle className="w-5 h-5 text-yellow-400" />
-          <span className="text-gray-400">مؤشر المخاطرة:</span>
-          <span className={`font-bold text-lg ${getRiskColor()}`}>
-            {riskLevel}
-          </span>
+      {/* Live Stocks Analysis */}
+      <div className="space-y-4">
+        <div className="flex items-center space-x-2 space-x-reverse mb-6">
+          <Zap className="w-6 h-6 text-neon-purple" />
+          <h2 className="text-2xl font-bold text-white">التحليل اللحظي للأسهم</h2>
+          <div className="flex items-center space-x-1 space-x-reverse text-sm text-gray-400">
+            <Clock className="w-4 h-4" />
+            <span>تحديث كل 30 ثانية</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {stocksData.map((stock) => (
+            <StockCard key={stock.symbol} stock={stock} />
+          ))}
+        </div>
+      </div>
+
+      {/* Market Alerts */}
+      <Card className="glass-effect p-6 border-yellow-500/30 glow-yellow">
+        <div className="flex items-center space-x-2 space-x-reverse mb-4">
+          <AlertTriangle className="w-5 h-5 text-yellow-500" />
+          <h3 className="text-xl font-semibold text-white">تنبيهات السوق</h3>
+        </div>
+        <div className="space-y-3">
+          <div className="bg-neon-green/10 border border-neon-green/30 rounded-lg p-3">
+            <span className="text-neon-green font-bold">🚀 فرصة قوية:</span>
+            <span className="text-gray-300 mr-2">NVDA كسر مقاومة تاريخية - توقع صعود قوي</span>
+          </div>
+          <div className="bg-neon-pink/10 border border-neon-pink/30 rounded-lg p-3">
+            <span className="text-neon-pink font-bold">⚠️ تحذير:</span>
+            <span className="text-gray-300 mr-2">TSLA تحت ضغط بيع شديد - احذر من الهبوط</span>
+          </div>
+          <div className="bg-neon-purple/10 border border-neon-purple/30 rounded-lg p-3">
+            <span className="text-neon-purple font-bold">📊 تحليل:</span>
+            <span className="text-gray-300 mr-2">السوق يشهد تقلبات عالية - اتبع إدارة المخاطر</span>
+          </div>
         </div>
       </Card>
-
-      {/* Market Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <AnalysisCard
-          title="S&P 500"
-          value={marketData.sp500.value.toFixed(2)}
-          subtitle={`${marketData.sp500.change > 0 ? '+' : ''}${marketData.sp500.change.toFixed(2)}%`}
-          trend={marketData.sp500.change > 0 ? 'up' : 'down'}
-          icon={<TrendingUp className="w-6 h-6" />}
-          glowColor={marketData.sp500.change > 0 ? 'green' : 'pink'}
-        />
-        
-        <AnalysisCard
-          title="NASDAQ"
-          value={marketData.nasdaq.value.toFixed(2)}
-          subtitle={`${marketData.nasdaq.change > 0 ? '+' : ''}${marketData.nasdaq.change.toFixed(2)}%`}
-          trend={marketData.nasdaq.change > 0 ? 'up' : 'down'}
-          icon={<Activity className="w-6 h-6" />}
-          glowColor={marketData.nasdaq.change > 0 ? 'green' : 'pink'}
-        />
-        
-        <AnalysisCard
-          title="Dow Jones"
-          value={marketData.dowJones.value.toFixed(2)}
-          subtitle={`${marketData.dowJones.change > 0 ? '+' : ''}${marketData.dowJones.change.toFixed(2)}%`}
-          trend={marketData.dowJones.change > 0 ? 'up' : 'down'}
-          icon={<DollarSign className="w-6 h-6" />}
-          glowColor={marketData.dowJones.change > 0 ? 'green' : 'pink'}
-        />
-      </div>
-
-      {/* Live Analysis */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="glass-effect p-6 border-neon-purple/30 glow-purple">
-          <div className="flex items-center space-x-2 space-x-reverse mb-4">
-            <Zap className="w-5 h-5 text-neon-purple" />
-            <h3 className="text-lg font-semibold text-white">التحليل اللحظي</h3>
-          </div>
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">السيولة:</span>
-              <span className="text-neon-green font-bold">مرتفعة</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">الشموع:</span>
-              <span className="text-neon-pink font-bold">هبوطية</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">الجدران:</span>
-              <span className="text-yellow-400 font-bold">متوازنة</span>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="glass-effect p-6 border-white/10">
-          <div className="flex items-center space-x-2 space-x-reverse mb-4">
-            <TrendingUp className="w-5 h-5 text-neon-green" />
-            <h3 className="text-lg font-semibold text-white">آخر التنبيهات</h3>
-          </div>
-          <div className="space-y-3 text-sm">
-            <div className="bg-neon-green/10 border border-neon-green/30 rounded-lg p-3">
-              <span className="text-neon-green font-bold">شراء قوي:</span>
-              <span className="text-gray-300 mr-2">AAPL كسر مقاومة 185$</span>
-            </div>
-            <div className="bg-neon-pink/10 border border-neon-pink/30 rounded-lg p-3">
-              <span className="text-neon-pink font-bold">تحذير:</span>
-              <span className="text-gray-300 mr-2">TSLA اقتراب من دعم 200$</span>
-            </div>
-          </div>
-        </Card>
-      </div>
     </div>
   );
 };
