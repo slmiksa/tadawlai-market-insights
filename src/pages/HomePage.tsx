@@ -5,6 +5,8 @@ import StockCard from '@/components/StockCard';
 import { TrendingUp, TrendingDown, Activity, DollarSign, AlertTriangle, Zap, Clock } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
+type RiskLevel = 'منخفض' | 'متوسط' | 'مرتفع';
+
 const HomePage = () => {
   const [stocksData, setStocksData] = useState([
     {
@@ -103,7 +105,7 @@ const HomePage = () => {
     activeSignals: 4,
     accuracy: 87,
     totalProfit: '+12.8%',
-    riskLevel: 'متوسط' as const
+    riskLevel: 'متوسط' as RiskLevel
   });
 
   // محاكاة تحديث البيانات كل 30 ثانية
